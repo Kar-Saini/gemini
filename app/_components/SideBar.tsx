@@ -20,7 +20,7 @@ const SideBar = () => {
       transition={{ duration: 0.5, ease: "easeInOut" }}
       className={`${
         expandedView ? "w-60" : "w-[72px]"
-      } bg-neutral-800/40 py-5 flex flex-col items-center gap-y-4 text-neutral-100 transition-all duration-300`}
+      } bg-neutral-800/40 py-5 hidden md:flex flex-col items-center gap-y-4 text-neutral-100 transition-all duration-300`}
     >
       <GiHamburgerMenu
         size={25}

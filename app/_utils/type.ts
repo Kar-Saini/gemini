@@ -4,7 +4,7 @@ export type Country = {
 };
 export interface PromptResponseType {
   id: string;
-  userPrompt: { timeStamp: string; prompt: string };
+  userPrompt: { timeStamp: string; prompt: string; image: string | null };
   geminiResponse?: { timeStamp: string; response: string };
 }
 

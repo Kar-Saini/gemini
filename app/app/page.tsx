@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { MdContentCopy } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { pacifico } from "../_utils/fonts";
+import Image from "next/image";
 
 const App = () => {
   const [saveChat, setSaveChat] = useState(false);
@@ -24,6 +25,8 @@ const App = () => {
   const dispatch = useDispatch();
   const inpRef = useRef<HTMLInputElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const selectedChatId = useSelector((store) => store.chats.selectedChatId);
   const [selectedChatDetails, setSelectedChatDetails] = useState<{
@@ -31,6 +34,18 @@ const App = () => {
     name: string;
   } | null>(null);
 
+  const handleIconClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log("Selected file:", file);
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+    }
+  };
   const chats = useSelector((store) => store.chats.chats);
   useEffect(() => {
     if (selectedChatId != "") {
@@ -55,11 +70,17 @@ const App = () => {
     setPromptResponse((prev) => {
       const newPromptResponse: PromptResponseType = {
         id,
-        userPrompt: { prompt, timeStamp: promptTimeStamp },
+        userPrompt: {
+          prompt,
+          timeStamp: promptTimeStamp,
+          image: imagePreview,
+        },
       };
       return [...prev, newPromptResponse];
     });
     setPrompt("");
+    if (imagePreview) setImagePreview(null);
+
     setTimeout(() => {
       const response = generateRandomNumberOfWords().join(" ");
       const responseTimeStamp = new Date().toLocaleTimeString();
@@ -103,7 +124,7 @@ const App = () => {
   return (
     <div className="relative w-full h-full">
       <div className="w-full flex flex-col-reverse justify-start items-stretch h-full py-4 ">
-        <div className="max-w-3xl w-full mx-auto flex flex-col-reverse h-full justify-between ">
+        <div className="sm:max-w-3xl max-w-xl w-full mx-auto flex flex-col-reverse h-full justify-between ">
           <div className="flex flex-col gap-y-2">
             {promptResponse.length > 0 && !loading && (
               <div className="flex justify-end gap-4 text-sm text-neutral-400 ">
@@ -116,40 +137,56 @@ const App = () => {
                 </div>
               </div>
             )}
-            <div className="flex flex-col w-full px-6 py-4 gap-6 border border-neutral-600 mx-auto rounded-3xl bg-neutral-900 ">
+            <div className="flex items-center w-full px-3 sm:px-6 py-2 sm:py-8 gap-3 sm:gap-6 border border-neutral-600 mx-auto rounded-2xl sm:rounded-3xl bg-neutral-900">
+              {imagePreview && (
+                <div className="relative shrink-0">
+                  <Image
+                    src={imagePreview}
+                    alt="preview"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-md object-cover"
+                  />
+                </div>
+              )}
+
               <input
                 ref={inpRef}
                 type="text"
                 placeholder="Ask Gemini"
-                className="w-full bg-transparent outline-none text-neutral-200 placeholder-neutral-500 text-sm"
+                className="flex-1 bg-transparent outline-none text-neutral-200 placeholder-neutral-500 text-sm sm:text-base"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => handleEnterPress(e)}
               />
-              <div className="flex justify-between items-center">
-                <div className="flex gap-6 text-neutral-400">
-                  <GoPlus
-                    size={20}
-                    className="hover:cursor-pointer hover:text-neutral-200"
-                  />
-                  <IoImagesOutline
-                    size={20}
-                    className="hover:cursor-pointer hover:text-neutral-200"
-                  />
-                </div>
-                {prompt && (
-                  <IoSend
-                    size={20}
-                    className="hover:cursor-pointer text-amber-400 hover:text-amber-500 transition-colors"
-                    onClick={handlePromptSend}
-                  />
-                )}
+
+              <div className="flex gap-4 sm:gap-6 text-neutral-400 items-center">
+                <IoImagesOutline
+                  size={20}
+                  className="hover:cursor-pointer hover:text-neutral-200"
+                  onClick={handleIconClick}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
               </div>
+
+              {prompt && (
+                <IoSend
+                  size={22}
+                  className="hover:cursor-pointer text-amber-400 hover:text-amber-500 transition-colors"
+                  onClick={handlePromptSend}
+                />
+              )}
             </div>
           </div>
           {promptResponse.length === 0 && (
             <h1 className={`${pacifico.className} text-5xl text-center`}>
-              Welocme {localStorage.getItem("gemini-user-name")}
+              Welcome {localStorage.getItem("gemini-user-name")}
             </h1>
           )}
           <div className="flex custom-scrollbar max-h-96 overflow-y-auto p-2 flex-col">
@@ -158,6 +195,7 @@ const App = () => {
                 <UserPrompt
                   prompt={entry.userPrompt.prompt}
                   timeStamp={entry.userPrompt.timeStamp}
+                  image={entry.userPrompt.image}
                 />
                 {entry.geminiResponse ? (
                   <GeminiResponse
@@ -242,12 +280,25 @@ const App = () => {
 function UserPrompt({
   timeStamp,
   prompt,
+  image,
 }: {
   timeStamp: string;
+  image: string | null;
   prompt: string;
 }) {
   return (
     <div className="flex flex-col items-end w-full gap-y-1">
+      {image && (
+        <div className="relative shrink-0">
+          <Image
+            src={image}
+            alt="preview"
+            width={32}
+            height={32}
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-md object-cover"
+          />
+        </div>
+      )}
       <p className="bg-neutral-800 p-3 rounded-tl-2xl rounded-bl-2xl rounded-br-2xl">
         {prompt}
       </p>

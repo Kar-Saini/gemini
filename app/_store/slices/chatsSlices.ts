@@ -3,9 +3,12 @@ import { Chats } from "@/app/_utils/type";
 type ChatsState = {
   chats: Chats[];
   selectedChatId: string;
+  username: string;
 };
 const initialState: ChatsState = {
   chats: [],
+  selectedChatId: "",
+  username: "",
 };
 
 const chatsSlice = createSlice({
@@ -17,9 +20,17 @@ const chatsSlice = createSlice({
     },
     deleteChat: (state, action: PayloadAction<string>) => {
       state.chats = state.chats.filter((chat) => chat.id !== action.payload);
+      state.selectedChatId = "";
+    },
+    selectChatId: (state, action: PayloadAction<string>) => {
+      state.selectedChatId = action.payload;
+    },
+    setUsernameInStore: (state, action) => {
+      state.username = action.payload;
     },
   },
 });
 
-export const { addChat, deleteChat } = chatsSlice.actions;
+export const { addChat, deleteChat, selectChatId, setUsernameInStore } =
+  chatsSlice.actions;
 export default chatsSlice.reducer;

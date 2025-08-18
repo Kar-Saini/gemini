@@ -20,6 +20,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
+        forcedTheme="dark"
       >
         <Toaster />
         {children}

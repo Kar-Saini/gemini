@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectChatId } from "../_store/slices/chatsSlices";
 
 const SideBar = () => {
   const [expandedView, setExpandedView] = useState(false);
@@ -49,8 +50,12 @@ function ChatDescriptionComponent({
   timeStamp: string;
   id: string;
 }) {
+  const dispatch = useDispatch();
   return (
-    <div className="flex flex-col items-start w-full bg-neutral-800 px-4 py-1 rounded-xl hover:bg-neutral-700 transition">
+    <div
+      className="flex flex-col items-start w-full bg-neutral-800 px-4 py-1 rounded-xl hover:bg-neutral-700 transition"
+      onClick={() => dispatch(selectChatId(id))}
+    >
       <p className="font-medium">{chatname}</p>
       <p className="text-[10px] text-neutral-400 w-full text-end">
         {timeStamp}

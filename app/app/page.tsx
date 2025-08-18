@@ -6,22 +6,42 @@ import { IoImagesOutline, IoSend } from "react-icons/io5";
 import { generateId, generateRandomNumberOfWords } from "../_utils/helper";
 import { PromptResponseType } from "../_utils/type";
 import { RiChatNewLine } from "react-icons/ri";
-import { useDispatch } from "react-redux";
-import { addChat } from "@/app/_store/slices/chatsSlices";
+import { useDispatch, useSelector } from "react-redux";
+import { addChat, deleteChat } from "@/app/_store/slices/chatsSlices";
 import toast from "react-hot-toast";
 import { MdContentCopy } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
+import { pacifico } from "../_utils/fonts";
 
 const App = () => {
   const [saveChat, setSaveChat] = useState(false);
   const [chatName, setChatName] = useState<string>("");
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [promptResponse, setPromptResponse] = useState<PromptResponseType[]>(
     []
   );
   const [prompt, setPrompt] = useState<string>("");
+  const dispatch = useDispatch();
   const inpRef = useRef<HTMLInputElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const selectedChatId = useSelector((store) => store.chats.selectedChatId);
+  const [selectedChatDetails, setSelectedChatDetails] = useState<{
+    timeStamp: string;
+    name: string;
+  } | null>(null);
+
+  const chats = useSelector((store) => store.chats.chats);
+  useEffect(() => {
+    if (selectedChatId != "") {
+      console.log(selectedChatId);
+      const chat = chats.find((chat) => chat.id === selectedChatId);
+      toast.success("Loading chat...");
+      setPromptResponse(chat.promptAndResponses);
+      setSelectedChatDetails({ name: chat.name, timeStamp: chat.timeStamp });
+    }
+  }, [selectedChatId, chats]);
+
   useEffect(() => {
     inpRef.current?.focus();
     if (scrollRef) scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -79,13 +99,14 @@ const App = () => {
     toast.success("Chat Discarded");
     setSaveChat(false);
   }
+
   return (
     <div className="relative w-full h-full">
-      <div className="w-full flex flex-col-reverse justify-start items-stretch h-full py-8 ">
+      <div className="w-full flex flex-col-reverse justify-start items-stretch h-full py-4 ">
         <div className="max-w-3xl w-full mx-auto flex flex-col-reverse h-full justify-between ">
-          <div className="flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-2">
             {promptResponse.length > 0 && !loading && (
-              <div className="flex justify-end gap-4 text-sm text-neutral-400">
+              <div className="flex justify-end gap-4 text-sm text-neutral-400 ">
                 <div
                   className="flex items-center gap-1 hover:cursor-pointer hover:text-neutral-500"
                   onClick={() => setSaveChat(true)}
@@ -126,7 +147,12 @@ const App = () => {
               </div>
             </div>
           </div>
-          <div className="flex custom-scrollbar max-h-96  overflow-y-auto p-2 flex-col">
+          {promptResponse.length === 0 && (
+            <h1 className={`${pacifico.className} text-5xl text-center`}>
+              Welocme User
+            </h1>
+          )}
+          <div className="flex custom-scrollbar max-h-96 overflow-y-auto p-2 flex-col">
             {promptResponse.map((entry) => (
               <div key={entry.id} className="flex flex-col gap-y-2 py-1">
                 <UserPrompt
@@ -147,6 +173,25 @@ const App = () => {
             ))}
             <div ref={scrollRef} />
           </div>
+          {selectedChatId !== "" && (
+            <div className=" flex justify-between">
+              <div className="flex flex-col ">
+                <h2 className="font-bold text-neutral-300">
+                  Chat Name: {selectedChatDetails?.name}
+                </h2>
+                <p className="text-xs text-neutral-500">
+                  {selectedChatId}, {selectedChatDetails?.timeStamp}
+                </p>
+              </div>
+              <MdDeleteOutline
+                className=""
+                onClick={() => {
+                  dispatch(deleteChat(selectedChatId));
+                  setPromptResponse([]);
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
       {saveChat && (
@@ -240,14 +285,12 @@ function GeminiResponse({
             {word}
           </motion.span>
         ))}
-        <p className="flex justify-end w-full">
-          <button
-            onClick={() => handleCopy(response)}
-            className="hover:cursor-pointer text-neutral-400"
-          >
-            <MdContentCopy size={15} />
-          </button>
-        </p>
+        <span
+          className="flex justify-end text-end w-full hover:cursor-pointer text-neutral-400"
+          onClick={() => handleCopy(response)}
+        >
+          <MdContentCopy size={15} />
+        </span>
       </p>
     </div>
   );

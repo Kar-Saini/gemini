@@ -1,12 +1,11 @@
 "use client";
 
 import React, { ChangeEvent, useState } from "react";
-import { cookie } from "../_utils/fonts";
 import { debouncedSearch } from "../_utils/helper";
 import toast from "react-hot-toast";
-import SelectCountryCode from "../_components/SelectCountryCode";
+import SelectCountryCode from "./SelectCountryCode";
 import { Country } from "../_utils/type";
-import OTPComponent from "../_components/OTPComponent";
+import OTPComponent from "./OTPComponent";
 import { AiOutlineLoading } from "react-icons/ai";
 import { motion } from "framer-motion";
 
@@ -55,20 +54,14 @@ const Authentication = () => {
   }
 
   return (
-    <div className=" bg-neutral-950 h-screen flex items-center justify-center">
+    <div className=" flex items-center justify-center w-full">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 2, ease: "easeInOut" }}
         className="flex justify-center items-center h-[90%]"
       >
-        <div className="border-2 border-neutral-800 px-8 py-6 md:p-8 rounded-2xl flex flex-col gap-y-5 bg-neutral-900 w-full max-w-md shadow-lg">
-          <h1
-            className={`${cookie.className} text-center text-6xl pb-2 border-b
-           border-neutral-700 text-neutral-100 `}
-          >
-            Welcome to Gemini
-          </h1>
+        <div className="border-2 border-neutral-800 px-8 py-6 md:p-8 rounded-2xl flex flex-col gap-y-5 bg-neutral-900 w-lg shadow-lg">
           {!otpSent && (
             <>
               <div className="w-full flex flex-col gap-2 relative">

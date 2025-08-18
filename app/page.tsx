@@ -1,21 +1,26 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { BsStars } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { pacifico } from "./_utils/fonts";
+import Authentication from "./_components/Authentication";
 
 const letters = "Gemini".split("");
 
 const Landing = () => {
   const router = useRouter();
+  const [showAuth, setShowAuth] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => router.push("/auth"), 3000);
+    const timer = setTimeout(() => setShowAuth(true), 3000);
     return () => clearTimeout(timer);
   }, [router]);
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className={` flex items-center justify-center`}>
+    <div
+      className="flex justify-center items-center h-screen bg-gradient-to-br from-neutral-900 via-black to-neutral-800
+ flex-col gap-y-12"
+    >
+      <div className={`flex items-center justify-center text-neutral-300`}>
         <motion.span
           initial={{ opacity: 0, y: 20, rotate: 0 }}
           animate={{ opacity: 1, y: 0, rotate: 360 }}
@@ -35,6 +40,8 @@ const Landing = () => {
           </motion.span>
         ))}
       </div>
+
+      {showAuth && <Authentication />}
     </div>
   );
 };

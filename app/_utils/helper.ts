@@ -8,6 +8,7 @@ async function getCountryDetailsBySlug(slug: string) {
     const res = await fetch(`${REST_COUNTRY_ENDPOINT}/${slug}`);
     const jsonRes = await res.json();
     if (jsonRes.message) return null;
+    //@ts-nocheck
     const finalRes = jsonRes.map((ele: any) => ({
       name: ele.name,
       code: ele.idd,
@@ -18,7 +19,6 @@ async function getCountryDetailsBySlug(slug: string) {
     return null;
   }
 }
-
 function debounceFunction(fn: (slug: string) => Promise<any>, delay: number) {
   let timer: NodeJS.Timeout | null = null;
   return function (slug: string) {

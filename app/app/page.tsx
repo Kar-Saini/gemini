@@ -149,7 +149,7 @@ const App = () => {
           </div>
           {promptResponse.length === 0 && (
             <h1 className={`${pacifico.className} text-5xl text-center`}>
-              Welocme User
+              Welocme {localStorage.getItem("gemini-user-name")}
             </h1>
           )}
           <div className="flex custom-scrollbar max-h-96 overflow-y-auto p-2 flex-col">

@@ -22,7 +22,7 @@ export default function OTPComponent({
   const [enteredUserName, setEnteredUsername] = useState("");
   const [inpArr, setInpArr] = useState<string[]>(new Array(DIGITS).fill(""));
   const inpRef = useRef<(HTMLInputElement | null)[]>([]);
-  const dispatch = useDispatch();
+
   useEffect(() => {
     inpRef.current[0]?.focus();
   }, []);
@@ -41,10 +41,6 @@ export default function OTPComponent({
         }, 1000);
         const username = localStorage.getItem("gemini-user-name") as string;
         if (!username) setUsernamExist(false);
-        else {
-          dispatch(setUsernameInStore(enteredUserName));
-          setUsernamExist(true);
-        }
       } else {
         toast.error("Incorrect OTP");
         setInpArr(new Array(DIGITS).fill(""));
@@ -53,13 +49,20 @@ export default function OTPComponent({
       setLoading(false);
     }, 3000);
   }
+  function handleNameEnter() {
+    setLoading(true);
+    localStorage.setItem("gemini-user-name", enteredUserName);
+    setUsernamExist(true);
+    setLoading(false);
+  }
+
   useEffect(() => {
-    if (otpVerified) {
+    if (otpVerified && usernameExist) {
       setTimeout(() => {
         router.push("/app");
       }, 2000);
     }
-  }, [otpVerified, router]);
+  }, [otpVerified, router, usernameExist]);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>, idx: number) {
     const val = e.target.value;
@@ -130,14 +133,14 @@ export default function OTPComponent({
         </>
       )}
       {otpVerified && !usernameExist && (
-        <div className="w-full flex flex-col gap-2">
-          <label
-            htmlFor="phone"
-            className="text-sm font-medium text-neutral-300"
-          >
-            Enter your name
-          </label>
-          <div className="flex gap-2">
+        <div className="w-full flex flex-col gap-y-2">
+          <div className="flex gap-2 flex-col  gap-y-2">
+            <label
+              htmlFor="phone"
+              className="text-sm font-medium text-neutral-300"
+            >
+              Enter your name
+            </label>
             <input
               type="text"
               id="phone"
@@ -147,6 +150,16 @@ export default function OTPComponent({
               onChange={(e) => setEnteredUsername(e.target.value)}
             />
           </div>
+          <button
+            className="bg-amber-500 transition-colors py-2 rounded-md text-neutral-900 font-semibold hover:cursor-pointer h-10"
+            onClick={handleNameEnter}
+          >
+            {loading ? (
+              <AiOutlineLoading className="animate-spin text-center w-full size-6" />
+            ) : (
+              "Prooceed"
+            )}
+          </button>
         </div>
       )}
     </div>

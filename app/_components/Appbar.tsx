@@ -10,7 +10,6 @@ const Appbar = () => {
         <BsStars size={20} />
         <h1 className={`${pacifico.className} text-3xl`}>Gemini</h1>
       </div>
-      =
     </div>
   );
 };

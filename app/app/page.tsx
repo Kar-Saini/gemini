@@ -184,7 +184,8 @@ const App = () => {
                 </p>
               </div>
               <MdDeleteOutline
-                className=""
+                size={25}
+                className="hover:text-neutral-400 hover:scale-95 hover:cursor-pointer"
                 onClick={() => {
                   dispatch(deleteChat(selectedChatId));
                   setPromptResponse([]);

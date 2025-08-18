@@ -8,7 +8,7 @@ async function getCountryDetailsBySlug(slug: string) {
     const res = await fetch(`${REST_COUNTRY_ENDPOINT}/${slug}`);
     const jsonRes = await res.json();
     if (jsonRes.message) return null;
-    const finalRes = jsonRes.map((ele) => ({
+    const finalRes = jsonRes.map((ele: any) => ({
       name: ele.name,
       code: ele.idd,
     }));

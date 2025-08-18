@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
-import { useDispatch } from "react-redux";
-import { setUsernameInStore } from "../_store/slices/chatsSlices";
 
 export default function OTPComponent({
   otpSent,
@@ -21,7 +19,7 @@ export default function OTPComponent({
   const [usernameExist, setUsernamExist] = useState(true);
   const [enteredUserName, setEnteredUsername] = useState("");
   const [inpArr, setInpArr] = useState<string[]>(new Array(DIGITS).fill(""));
-  const inpRef = useRef<(HTMLInputElement | null)[]>([]);
+  const inpRef = useRef<HTMLInputElement[] | null[]>([]);
 
   useEffect(() => {
     inpRef.current[0]?.focus();
@@ -75,7 +73,10 @@ export default function OTPComponent({
     }
   }
 
-  function handleKeyDown(e: KeyboardEvent, idx: number) {
+  function handleKeyDown(
+    e: React.KeyboardEvent<HTMLInputElement>,
+    idx: number
+  ) {
     if (e.key === "Backspace") {
       if (inpArr[idx] !== "") {
         const newArr = [...inpArr];
@@ -109,7 +110,9 @@ export default function OTPComponent({
                 <input
                   key={idx}
                   className="text-neutral-200 border-2 border-neutral-400 w-12 h-12 text-center outline-none rounded-sm focus:border-amber-400"
-                  ref={(ele) => (inpRef.current[idx] = ele)}
+                  ref={(ele) => {
+                    inpRef.current[idx] = ele;
+                  }}
                   onChange={(e) => handleInputChange(e, idx)}
                   value={inpArr[idx]}
                   onKeyDown={(e) => handleKeyDown(e, idx)}

@@ -4,10 +4,13 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { selectChatId } from "../_store/slices/chatsSlices";
+import { Chats } from "../_utils/type";
 
 const SideBar = () => {
   const [expandedView, setExpandedView] = useState(false);
-  const chats = useSelector((store: any) => store.chats.chats); // add proper type later
+  const chats = useSelector(
+    (store: { chats: { chats: Chats[] } }) => store.chats.chats
+  );
   console.log(chats);
 
   return (
@@ -26,10 +29,10 @@ const SideBar = () => {
       />
 
       {expandedView && chats.length > 0 && (
-        <div className="w-full space-y-2">
-          {chats.map((chat: any) => (
+        <div className="w-full space-y-2 px-2">
+          {chats.map((chat: Chats) => (
             <ChatDescriptionComponent
-              chatname={chat.name}
+              chatname={chat?.name}
               id={chat.id}
               timeStamp={chat.timeStamp}
               key={chat.id}
@@ -53,13 +56,13 @@ function ChatDescriptionComponent({
   const dispatch = useDispatch();
   return (
     <div
-      className="flex flex-col items-start w-full bg-neutral-800 px-4 py-1 rounded-xl hover:bg-neutral-700 transition"
+      className="flex justify-between items-center  w-full bg-neutral-800 px-4 py-1 rounded-xl hover:bg-neutral-700 transition"
       onClick={() => dispatch(selectChatId(id))}
     >
-      <p className="font-medium">{chatname}</p>
-      <p className="text-[10px] text-neutral-400 w-full text-end">
-        {timeStamp}
-      </p>
+      <div className="flex flex-col  w-full">
+        <p className="font-medium">{chatname}</p>
+        <p className="text-[10px] text-neutral-400 w-full ">{timeStamp}</p>
+      </div>
     </div>
   );
 }

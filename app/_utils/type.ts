@@ -10,7 +10,7 @@ export interface PromptResponseType {
 
 export type Chats = {
   name?: string;
-  timeStanp: string;
+  timeStamp: string;
   id: string;
   promptAndResponses: PromptResponseType[];
 }[];

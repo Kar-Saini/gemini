@@ -7,10 +7,10 @@ import { BsStars } from "react-icons/bs";
 const Appbar = () => {
   const theme = useTheme();
   return (
-    <div className="py-2 px-4 border-b-2 border-neutral-900 w-full">
+    <div className="py-4 px-4  w-full">
       <div className="flex gap-1 items-center ">
         <BsStars size={20} />
-        <h1 className={`${pacifico.className} text-3xl`}>gemini</h1>
+        <h1 className={`${pacifico.className} text-3xl`}>Gemini</h1>
       </div>
     </div>
   );

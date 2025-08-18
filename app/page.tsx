@@ -5,7 +5,7 @@ import { BsStars } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { pacifico } from "./_utils/fonts";
 
-const letters = "gemini".split("");
+const letters = "Gemini".split("");
 
 const Landing = () => {
   const router = useRouter();

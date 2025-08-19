@@ -9,7 +9,7 @@ import { Chat, Chats } from "../_utils/type";
 const SideBar = () => {
   const [expandedView, setExpandedView] = useState(false);
   const chats = useSelector(
-    (store: { chats: { chats: Chats[] } }) => store.chats.chats
+    (store: { chats: { chats: Chats } }) => store.chats.chats
   );
   console.log(chats);
 
@@ -30,7 +30,7 @@ const SideBar = () => {
 
       {expandedView && chats.length > 0 && (
         <div className="w-full space-y-2 px-2">
-          {chats.map((chat: Chat) => {
+          {chats.map((chat) => {
             return (
               <ChatDescriptionComponent
                 chatname={chat?.name || ""}

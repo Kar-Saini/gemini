@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Chats } from "@/app/_utils/type";
+import { Chat, Chats } from "@/app/_utils/type";
 type ChatsState = {
-  chats: Chats[];
+  chats: Chats;
   selectedChatId: string;
   username: string;
 };
@@ -15,7 +15,7 @@ const chatsSlice = createSlice({
   name: "chats",
   initialState,
   reducers: {
-    addChat: (state, action: PayloadAction<Chats>) => {
+    addChat: (state, action: PayloadAction<Chat>) => {
       state.chats.push(action.payload);
     },
     deleteChat: (state, action: PayloadAction<string>) => {

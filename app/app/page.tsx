@@ -54,9 +54,16 @@ const App = () => {
     if (selectedChatId != "") {
       console.log(selectedChatId);
       const chat = chats.find((chat) => chat.id === selectedChatId);
+      if (!chat) {
+        toast.error("Error finding chat");
+        return;
+      }
       toast.success("Loading chat...");
       setPromptResponse(chat.promptAndResponses);
-      setSelectedChatDetails({ name: chat.name, timeStamp: chat.timeStamp });
+      setSelectedChatDetails({
+        name: chat.name as string,
+        timeStamp: chat.timeStamp,
+      });
     }
   }, [selectedChatId, chats]);
 

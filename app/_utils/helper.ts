@@ -1,6 +1,16 @@
 const REST_COUNTRY_ENDPOINT = "https://restcountries.com/v3.1/name";
 const alphabets = "qwertyuioplkjhgfdsazxcvbnmQAZWSXEDCRFVTGBYHNUJMIKOLP";
-
+interface CountryAPIResponse {
+  name: {
+    common: string;
+    official: string;
+    nativeName?: Record<string, { official: string; common: string }>;
+  };
+  idd?: {
+    root?: string;
+    suffixes?: string[];
+  };
+}
 async function getCountryDetailsBySlug(slug: string) {
   console.log(slug);
   if (!slug) return null;
@@ -9,7 +19,7 @@ async function getCountryDetailsBySlug(slug: string) {
     const jsonRes = await res.json();
     if (jsonRes.message) return null;
     //@ts-nocheck
-    const finalRes = jsonRes.map((ele: any) => ({
+    const finalRes = jsonRes.map((ele: CountryAPIResponse) => ({
       name: ele.name,
       code: ele.idd,
     }));
@@ -19,7 +29,12 @@ async function getCountryDetailsBySlug(slug: string) {
     return null;
   }
 }
-function debounceFunction(fn: (slug: string) => Promise<any>, delay: number) {
+function debounceFunction(
+  fn: (
+    slug: string
+  ) => Promise<{ name: string; code: { root?: string; suffixes?: string[] } }>,
+  delay: number
+) {
   let timer: NodeJS.Timeout | null = null;
   return function (slug: string) {
     if (timer) clearTimeout(timer);

@@ -8,9 +8,11 @@ export interface PromptResponseType {
   geminiResponse?: { timeStamp: string; response: string };
 }
 
-export type Chats = {
+export type Chat = {
   name?: string;
   timeStamp: string;
   id: string;
   promptAndResponses: PromptResponseType[];
-}[];
+};
+
+export type Chats = Chat[];

@@ -1,10 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { GoPlus } from "react-icons/go";
 import { IoImagesOutline, IoSend } from "react-icons/io5";
 import { generateId, generateRandomNumberOfWords } from "../_utils/helper";
-import { PromptResponseType } from "../_utils/type";
+import { Chat, PromptResponseType } from "../_utils/type";
 import { RiChatNewLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { addChat, deleteChat } from "@/app/_store/slices/chatsSlices";
@@ -13,6 +12,7 @@ import { MdContentCopy } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { pacifico } from "../_utils/fonts";
 import Image from "next/image";
+import { RootState } from "../_store/store";
 
 const App = () => {
   const [saveChat, setSaveChat] = useState(false);
@@ -28,7 +28,9 @@ const App = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const selectedChatId = useSelector((store) => store.chats.selectedChatId);
+  const selectedChatId = useSelector(
+    (store: RootState) => store.chats.selectedChatId
+  );
   const [selectedChatDetails, setSelectedChatDetails] = useState<{
     timeStamp: string;
     name: string;
@@ -46,7 +48,8 @@ const App = () => {
       setImagePreview(imageUrl);
     }
   };
-  const chats = useSelector((store) => store.chats.chats);
+  const chats = useSelector((store: RootState) => store.chats.chats);
+  console.log(chats);
   useEffect(() => {
     if (selectedChatId != "") {
       console.log(selectedChatId);
@@ -95,7 +98,7 @@ const App = () => {
     }, Math.ceil(Math.random() * 10 * 1000));
   }
 
-  function handleEnterPress(e: KeyboardEvent) {
+  function handleEnterPress(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") handlePromptSend();
   }
 

@@ -4,7 +4,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { selectChatId } from "../_store/slices/chatsSlices";
-import { Chats } from "../_utils/type";
+import { Chat, Chats } from "../_utils/type";
 
 const SideBar = () => {
   const [expandedView, setExpandedView] = useState(false);
@@ -30,14 +30,16 @@ const SideBar = () => {
 
       {expandedView && chats.length > 0 && (
         <div className="w-full space-y-2 px-2">
-          {chats.map((chat: Chats) => (
-            <ChatDescriptionComponent
-              chatname={chat?.name}
-              id={chat.id}
-              timeStamp={chat.timeStamp}
-              key={chat.id}
-            />
-          ))}
+          {chats.map((chat: Chat) => {
+            return (
+              <ChatDescriptionComponent
+                chatname={chat?.name || ""}
+                id={chat.id}
+                timeStamp={chat.timeStamp}
+                key={chat.id}
+              />
+            );
+          })}
         </div>
       )}
     </motion.div>

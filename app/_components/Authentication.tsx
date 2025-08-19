@@ -61,7 +61,7 @@ const Authentication = () => {
         transition={{ duration: 2, ease: "easeInOut" }}
         className="flex justify-center items-center h-[90%]"
       >
-        <div className="border-t-2 border-neutral-800 px-8 py-6 md:p-8  flex flex-col gap-y-5 w-lg shadow-lg">
+        <div className="border-t-2 border-neutral-800 px-8 py-6 md:p-8 flex flex-col gap-y-5 w-lg shadow-lg">
           {!otpSent && (
             <>
               <div className="w-full flex flex-col gap-2 relative">

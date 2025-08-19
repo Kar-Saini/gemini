@@ -89,10 +89,10 @@ export default function OTPComponent({
   }
 
   return (
-    <div className=" flex flex-col gap-y-4 relative">
+    <div className=" flex flex-col gap-y-4 bg-pink-50 p-2">
       {!otpVerified && (
         <>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center bg-pink-50">
             <IoMdArrowRoundBack
               size={30}
               className="hover:cursor-pointer hover:scale-105 duration-300 transition-transform"
@@ -103,7 +103,7 @@ export default function OTPComponent({
               Enter the OTP Below
             </p>
           </div>
-          <div className="flex justify-center gap-6">
+          <div className="flex justify-center gap-4">
             {Array(DIGITS)
               .fill(1)
               .map((_, idx) => (
@@ -128,7 +128,7 @@ export default function OTPComponent({
             onClick={handleOtpVerification}
           >
             {loading ? (
-              <AiOutlineLoading className="animate-spin text-center w-full size-6" />
+              <AiOutlineLoading className="animate-spin text-center w-full size-4" />
             ) : (
               "Verify"
             )}
